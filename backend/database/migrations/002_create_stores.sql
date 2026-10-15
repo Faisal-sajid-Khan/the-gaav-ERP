@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS stores (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  timezone VARCHAR(50) NOT NULL DEFAULT 'Asia/Kolkata',
+  currency VARCHAR(10) NOT NULL DEFAULT 'INR',
+  currency_symbol VARCHAR(10) NOT NULL DEFAULT '₹',
+  shopify_domain VARCHAR(255) NULL,
+  shopify_client_id VARCHAR(255) NULL,
+  shopify_client_secret TEXT NULL,
+  shopify_access_token TEXT NULL,
+  shopify_token_expires_at DATETIME NULL,
+  shopify_webhook_secret TEXT NULL,
+  shopify_location_id VARCHAR(100) NULL,
+  shopify_api_version VARCHAR(20) DEFAULT '2025-01',
+  sync_enabled TINYINT(1) DEFAULT 0,
+  sync_status ENUM('not_configured','connected','error','syncing') DEFAULT 'not_configured',
+  last_sync_at DATETIME NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
