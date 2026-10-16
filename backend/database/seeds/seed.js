@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 async function seed() {
   const connConfig = process.env.DATABASE_URL
     ? {
-        uri: process.env.DATABASE_URL,
+        uri: process.env.DATABASE_URL.replace(/\?.*$/, ''),
         ssl: { rejectUnauthorized: false }
       }
     : {

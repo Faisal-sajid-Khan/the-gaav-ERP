@@ -4,7 +4,7 @@ const mysql = require('mysql2/promise');
 
 const dbConfig = process.env.DATABASE_URL
   ? {
-      uri: process.env.DATABASE_URL,
+      uri: process.env.DATABASE_URL.replace(/\?.*$/, ''),
       waitForConnections: true,
       connectionLimit: 15,
       queueLimit: 0,

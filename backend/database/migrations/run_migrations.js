@@ -7,7 +7,7 @@ const path = require('path');
 async function runMigrations() {
   const connConfig = process.env.DATABASE_URL
     ? {
-        uri: process.env.DATABASE_URL,
+        uri: process.env.DATABASE_URL.replace(/\?.*$/, ''),
         multipleStatements: true,
         ssl: { rejectUnauthorized: false }
       }

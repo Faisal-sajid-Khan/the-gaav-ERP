@@ -1,6 +1,8 @@
 'use strict';
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
+const fs = require('fs');
 const helmet = require('helmet');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -26,7 +28,7 @@ const expenseRoutes = require('./features/expenses/expenseRoutes');
 const app = express();
 
 // Security middleware
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 
 // CORS configuration
 const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173,http://localhost:3000')
@@ -90,7 +92,17 @@ app.use('/api/audit-logs', auditRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/expenses', expenseRoutes);
 
-// 404 handler
+// Serve frontend static assets if built
+const frontendDist = path.join(__dirname, '../../frontend/dist');
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get('*', (req, res, next) => {
+    if (req.url.startsWith('/api') || req.url === '/health') return next();
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  });
+}
+
+// 404 handler for API routes
 app.use((req, res) => {
   res.status(404).json({ success: false, message: `Route not found: ${req.method} ${req.url}` });
 });
