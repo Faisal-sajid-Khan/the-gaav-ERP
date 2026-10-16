@@ -5,15 +5,23 @@ const fs = require('fs');
 const path = require('path');
 
 async function runMigrations() {
-  const conn = await mysql.createConnection({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'thegaaverp',
-    port: parseInt(process.env.DB_PORT, 10) || 3306,
-    multipleStatements: true,
-    ssl: (process.env.DB_SSL === 'true' || process.env.DB_SSL === '1') ? { rejectUnauthorized: false } : undefined,
-  });
+  const connConfig = process.env.DATABASE_URL
+    ? {
+        uri: process.env.DATABASE_URL,
+        multipleStatements: true,
+        ssl: { rejectUnauthorized: false }
+      }
+    : {
+        host: process.env.DB_HOST || 'localhost',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || '',
+        database: process.env.DB_NAME || 'thegaaverp',
+        port: parseInt(process.env.DB_PORT, 10) || 3306,
+        multipleStatements: true,
+        ssl: (process.env.DB_SSL === 'true' || process.env.DB_SSL === '1') ? { rejectUnauthorized: false } : undefined,
+      };
+
+  const conn = await mysql.createConnection(connConfig);
 
   console.log('Connected to MySQL database:', process.env.DB_NAME);
 

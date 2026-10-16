@@ -2,19 +2,29 @@
 require('dotenv').config();
 const mysql = require('mysql2/promise');
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'thegaaverp',
-  port: parseInt(process.env.DB_PORT, 10) || 3306,
-  waitForConnections: true,
-  connectionLimit: 15,
-  queueLimit: 0,
-  timezone: '+00:00',
-  dateStrings: false,
-  ssl: (process.env.DB_SSL === 'true' || process.env.DB_SSL === '1') ? { rejectUnauthorized: false } : undefined,
-});
+const dbConfig = process.env.DATABASE_URL
+  ? {
+      uri: process.env.DATABASE_URL,
+      waitForConnections: true,
+      connectionLimit: 15,
+      queueLimit: 0,
+      ssl: { rejectUnauthorized: false }
+    }
+  : {
+      host: process.env.DB_HOST || 'localhost',
+      user: process.env.DB_USER || 'root',
+      password: process.env.DB_PASSWORD || '',
+      database: process.env.DB_NAME || 'thegaaverp',
+      port: parseInt(process.env.DB_PORT, 10) || 3306,
+      waitForConnections: true,
+      connectionLimit: 15,
+      queueLimit: 0,
+      timezone: '+00:00',
+      dateStrings: false,
+      ssl: (process.env.DB_SSL === 'true' || process.env.DB_SSL === '1') ? { rejectUnauthorized: false } : undefined,
+    };
+
+const pool = mysql.createPool(dbConfig);
 
 pool.getConnection()
   .then(conn => {

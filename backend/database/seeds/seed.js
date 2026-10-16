@@ -4,14 +4,21 @@ const mysql = require('mysql2/promise');
 const bcrypt = require('bcryptjs');
 
 async function seed() {
-  const conn = await mysql.createConnection({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'thegaaverp',
-    port: parseInt(process.env.DB_PORT, 10) || 3306,
-    ssl: (process.env.DB_SSL === 'true' || process.env.DB_SSL === '1') ? { rejectUnauthorized: false } : undefined,
-  });
+  const connConfig = process.env.DATABASE_URL
+    ? {
+        uri: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false }
+      }
+    : {
+        host: process.env.DB_HOST || 'localhost',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || '',
+        database: process.env.DB_NAME || 'thegaaverp',
+        port: parseInt(process.env.DB_PORT, 10) || 3306,
+        ssl: (process.env.DB_SSL === 'true' || process.env.DB_SSL === '1') ? { rejectUnauthorized: false } : undefined,
+      };
+
+  const conn = await mysql.createConnection(connConfig);
 
   console.log('Seeding initial data...');
 
