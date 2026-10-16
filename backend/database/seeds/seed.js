@@ -10,6 +10,7 @@ async function seed() {
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || 'thegaaverp',
     port: parseInt(process.env.DB_PORT, 10) || 3306,
+    ssl: (process.env.DB_SSL === 'true' || process.env.DB_SSL === '1') ? { rejectUnauthorized: false } : undefined,
   });
 
   console.log('Seeding initial data...');

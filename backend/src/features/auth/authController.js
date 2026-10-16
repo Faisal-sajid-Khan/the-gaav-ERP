@@ -5,10 +5,11 @@ const authModel = require('./authModel');
 const { success, error } = require('../../utils/responseHelper');
 const { auditLog } = require('../../utils/auditLogger');
 
+const isProd = process.env.NODE_ENV === 'production';
 const COOKIE_OPTS = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'lax',
+  secure: isProd,
+  sameSite: isProd ? 'none' : 'lax',
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 

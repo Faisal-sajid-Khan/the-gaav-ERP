@@ -13,6 +13,7 @@ const pool = mysql.createPool({
   queueLimit: 0,
   timezone: '+00:00',
   dateStrings: false,
+  ssl: (process.env.DB_SSL === 'true' || process.env.DB_SSL === '1') ? { rejectUnauthorized: false } : undefined,
 });
 
 pool.getConnection()

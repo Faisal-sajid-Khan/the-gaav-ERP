@@ -12,6 +12,7 @@ async function runMigrations() {
     database: process.env.DB_NAME || 'thegaaverp',
     port: parseInt(process.env.DB_PORT, 10) || 3306,
     multipleStatements: true,
+    ssl: (process.env.DB_SSL === 'true' || process.env.DB_SSL === '1') ? { rejectUnauthorized: false } : undefined,
   });
 
   console.log('Connected to MySQL database:', process.env.DB_NAME);
